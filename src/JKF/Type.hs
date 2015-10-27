@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module JKF.Type (
     JKF(..)
-  , Header
+  , Header(..)
   , Initial(..)
   , StateFormat(..)
   , MoveMoveFormat(..)
@@ -12,6 +12,7 @@ module JKF.Type (
   , Board
   , Cel(..)
   , PlaceFormat(..)
+  , Color(..)
   ) where
 
 import           Data.Aeson     ((.:), (.=))
@@ -38,10 +39,10 @@ data Header = Header {
   } deriving (Show, Eq, Generic)
 
 instance A.ToJSON Header where
-  toJSON (Header b w s f p) = object ["開始日時" .= s, "終了日時" .= f, "手合割" .= p, "先手" .= b, "後手" .= w]
+  toJSON (Header b w s f p) = object ["先手" .= b, "後手" .= w, "開始日時" .= s, "終了日時" .= f, "手合割" .= p]
 
 instance A.FromJSON Header where
-  parseJSON (A.Object v) = Header <$> v .: "開始日時" <*> v .: "終了日時" <*> v .: "手合割" <*> v .: "先手" <*> v .: "後手"
+  parseJSON (A.Object v) = Header <$>  v .: "先手" <*> v .: "後手" <*> v .: "開始日時" <*> v .: "終了日時" <*> v .: "手合割"
 
 data Initial = Initial {
     initialPreset :: Text
