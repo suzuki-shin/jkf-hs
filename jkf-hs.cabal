@@ -18,6 +18,7 @@ library
   exposed-modules:     Lib
                      , JKF.Type
   build-depends:       base >= 4.7 && < 5
+                     , aeson
                      , containers
                      , parsec
                      , text
