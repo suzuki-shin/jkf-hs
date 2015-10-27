@@ -2,13 +2,13 @@ name:                jkf-hs
 version:             0.1.0.0
 synopsis:            Initial project template from stack
 description:         Please see README.md
-homepage:            http://github.com/githubuser/jkf-hs#readme
+homepage:            http://github.com/suzuki-shin/jkf-hs#readme
 license:             BSD3
 license-file:        LICENSE
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2010 Author Here
-category:            Web
+author:              SUZUKI Shinichiro
+maintainer:          shinichiro.su@gmail.com
+copyright:           2010 SUZUKI Shinichiro
+category:            Game
 build-type:          Simple
 -- extra-source-files:
 cabal-version:       >=1.10
@@ -16,7 +16,11 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Lib
+                     , JKF.Type
   build-depends:       base >= 4.7 && < 5
+                     , containers
+                     , parsec
+                     , text
   default-language:    Haskell2010
 
 executable jkf-hs-exe
@@ -38,4 +42,4 @@ test-suite jkf-hs-test
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/jkf-hs
+  location: https://github.com/suzuki-shin/jkf-hs
