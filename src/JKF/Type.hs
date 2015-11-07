@@ -13,6 +13,8 @@ module JKF.Type (
   , Cel(..)
   , PlaceFormat(..)
   , Color(..)
+  , Piece(..)
+  , kanjiPiece
   ) where
 
 import           Data.Aeson     (Object, object, (.:), (.=))
@@ -76,10 +78,10 @@ data MoveMoveFormat = MoveMoveFormat {
     moveMoveFormatColor    :: Color
   , moveMoveFormatFrom     :: Maybe PlaceFormat
   , moveMoveFormatTo       :: Maybe PlaceFormat
-  , moveMoveFormatPiece    :: String
+  , moveMoveFormatPiece    :: Piece
   , moveMoveFormatSame     :: Maybe Bool
   , moveMoveFormatPromote  :: Maybe Bool
-  , moveMoveFormatCapture  :: Maybe String
+  , moveMoveFormatCapture  :: Maybe Piece
   , moveMoveFormatRelative :: Maybe String
   } deriving (Show, Eq, Generic)
 
@@ -138,9 +140,24 @@ instance A.ToJSON Cel where
 instance A.FromJSON Cel where
 
 data Piece =
-    Fu | Ky | Ke | Gi | Ki | Ka | Hi | Ou
-  | To | NKy | NKe | NGi | Um | Ry
+    FU | KY | KE | GI | KI | KA | HI | OU
+  | TO | NY | NK | NG | UM | RY
   deriving (Show, Eq, Ord, Generic)
+
+kanjiPiece FU = "歩"
+kanjiPiece KY = "香"
+kanjiPiece KE = "桂"
+kanjiPiece GI = "銀"
+kanjiPiece KI = "金"
+kanjiPiece KA = "角"
+kanjiPiece HI = "飛"
+kanjiPiece OU = "玉"
+kanjiPiece TO = "と"
+kanjiPiece NY = "杏"
+kanjiPiece NK = "圭"
+kanjiPiece NG = "全"
+kanjiPiece RY = "竜"
+
 
 instance A.ToJSON Piece where
 instance A.FromJSON Piece where

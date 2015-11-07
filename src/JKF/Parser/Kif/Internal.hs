@@ -1,8 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 module JKF.Parser.Kif.Internal where
 
+import           Control.Applicative                    ((<$>), (<*>))
+import           Data.Char                              (digitToInt)
+import           Data.Maybe                             (isNothing)
 import           Data.Text                              (Text)
-import qualified JKF.Type                               as Type
+import           JKF.Type
 import           Text.Parsec
 import           Text.Parsec.Char
 import           Text.Parsec.String
@@ -44,13 +47,22 @@ header = do
 
 -- splitLine = return $ many $ string "手数----指手--" "-------消費時間--"
 
+sashite :: Parser MoveMoveFormat
 sashite = do
   spaces
-  n <- digit
+  n <- many digit
   spaces
-  v <- many $ noneOf "\r\n"
+  toP <- toPos
+  koma <- kanjiKoma
+  nari <- (string "成" >> return (Just True))
+      <|> (string "" >> return (Just False))
+  spaces
+  fromP <- optionMaybe fromPos
   endOfLine
-  return (n, v)
+  let
+    color = if read n `mod` 2 == 1 then Black else White
+    dou = if isNothing toP then Just True else Just False
+  return $ MoveMoveFormat color fromP toP koma dou nari Nothing Nothing
 
 skipLine :: Parser String
 skipLine = do
@@ -59,11 +71,21 @@ skipLine = do
   endOfLine
   return v
 
-fromPos :: Parser (Int, Int)
+toPos :: Parser (Maybe PlaceFormat)
+toPos =
+  (string "同" >> return Nothing)
+  <|> do
+    x <- zenkakuNum
+    y <- kanjiNum
+    return $ Just $ PlaceFormat x y
+
+fromPos :: Parser PlaceFormat
 fromPos = do
-  x <- zenkakuNum
-  y <- kanjiNum
-  return (x,y)
+  char '('
+  x <- digitToInt <$> digit
+  y <- digitToInt <$> digit
+  char ')'
+  return $ PlaceFormat x y
 
 zenkakuNum =
       (string "１" >> return 1)
@@ -86,3 +108,20 @@ kanjiNum =
   <|> (string "七" >> return 7)
   <|> (string "八" >> return 8)
   <|> (string "九" >> return 9)
+
+kanjiKoma =
+      (string "歩" >> return FU)
+  <|> (string "香" >> return KY)
+  <|> (string "桂" >> return KE)
+  <|> (string "銀" >> return GI)
+  <|> (string "金" >> return KI)
+  <|> (string "角" >> return KA)
+  <|> (string "飛" >> return HI)
+  <|> (string "玉" >> return OU)
+  <|> (string "王" >> return OU)
+  <|> (string "と" >> return TO)
+  <|> (string "杏" >> return NY)
+  <|> (string "圭" >> return NK)
+  <|> (string "全" >> return NG)
+  <|> (string "竜" >> return RY)
+  <|> (string "龍" >> return RY)
