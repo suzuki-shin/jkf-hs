@@ -73,7 +73,10 @@ skipLine = do
 
 toPos :: Parser (Maybe PlaceFormat)
 toPos =
-  (string "同" >> return Nothing)
+  (do
+    string "同"
+    skipMany (string "　")
+    return Nothing)
   <|> do
     x <- zenkakuNum
     y <- kanjiNum
