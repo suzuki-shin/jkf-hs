@@ -12,13 +12,14 @@ import           Text.Parsec.String
 import           Text.ParserCombinators.Parsec.Language
 import qualified Text.ParserCombinators.Parsec.Token    as P
 
--- kifu :: Parser Type.JKF
+kifu :: Parser JKF
 kifu = do
   many skipLine
   comment_ <- many $ try comment
   headers1 <- many $ try header
-  moves <- many $ try sashite
-  return (comment_, headers1, moves)
+  movemoves <- many $ try sashite
+  let moves = map (\mm -> MoveFormat Nothing (Just mm) Nothing Nothing Nothing) movemoves
+  return $ JKF (Header "sente" "gote" "1/1 00:00" "1/1 10:00" "hirate") Nothing moves
 
 --   hs <- try headers
 --   kls <- try kifuLines
